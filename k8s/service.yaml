@@ -1,0 +1,18 @@
+apiVersion: v1 # Service는 core API 그룹 (v1)
+kind: Service # 리소스 타입: Service
+metadata:
+  name: k8s-test-service # Service 이름
+  namespace: k8s-test-app # 속한 네임스페이스
+  labels: # 레이블 (선택 사항, 다른 리소스 매칭 용도)
+    app: k8s-test-app
+
+spec:
+  type: ClusterIP # Service 타입: ClusterIP (클러스터 내부에서만 접근 가능)
+  ports:
+    - port: 80 # Service가 노출하는 포트 (Ingress가 이 포트로 접근)
+      targetPort: 3000 # 파드 내부 컨테이너 포트 (애플리케이션 리스닝 포트)
+      protocol: TCP # 통신 프로토콜 (HTTP는 TCP 기반)
+      name: http # 포트 이름 (선택 사항, 여러 포트 쓸 때 유용)
+
+  selector:
+    app: k8s-test-app # 이 레이블을 가진 파드들을 Service 대상(Target)으로 지정

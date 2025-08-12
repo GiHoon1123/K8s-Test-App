@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  jenkins:
+    image: jenkins/jenkins:lts-jdk17
+    container_name: jenkins
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+    environment:
+      - JENKINS_OPTS=--httpPort=8080
+    networks:
+      - jenkins-network
+
+  argocd:
+    image: argoproj/argocd:latest
+    container_name: argocd-server
+    restart: unless-stopped
+    ports:
+      - "9090:8080"
+      - "9091:9090"
+    environment:
+      - ARGOCD_ADMIN_PASSWORD=admin123
+    volumes:
+      - argocd_data:/home/argocd
+    networks:
+      - jenkins-network
+
+volumes:
+  jenkins_home:
+  argocd_data:
+
+networks:
+  jenkins-network:
+    driver: bridge

@@ -1,0 +1,152 @@
+apiVersion: apps/v1 # Deployment 리소스의 API 버전
+kind: Deployment # 리소스 타입: Deployment (파드를 자동 관리/배포)
+metadata:
+  name: k8s-test-app # Deployment 이름
+  namespace: k8s-test-app # 배포될 네임스페이스
+  labels: # 레이블 (다른 리소스와 매칭에 사용)
+    app: k8s-test-app
+
+spec:
+  replicas: 3 # 동시에 실행할 파드 개수 (복제본)
+  selector: # Deployment가 관리할 파드 선택 기준
+    matchLabels:
+      app: k8s-test-app
+
+  template: # 생성할 파드의 템플릿
+    metadata:
+      labels:
+        app: k8s-test-app # 파드 레이블 → Service와 매칭할 때 사용
+    spec:
+      containers: # 파드 안에서 실행할 컨테이너 정의
+        - name: k8s-test-app # 컨테이너 이름
+          image: k8s-test-app:latest # 사용할 컨테이너 이미지 (태그: latest)
+          ports:
+            - containerPort: 3001 # 컨테이너 내부에서 열릴 포트
+
+          # 환경 변수 (Secret에서 값 불러옴)
+          env:
+            - name: NODE_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: k8s-test-secret-prod # 참조할 Secret 이름
+                  key: NODE_ENV # 가져올 키 이름
+                          - name: PORT
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: PORT
+              - name: APP_NAME
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: APP_NAME
+              - name: API_VERSION
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: API_VERSION
+              - name: LOG_LEVEL
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: LOG_LEVEL
+              - name: DB_HOST
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: DB_HOST
+              - name: DB_PORT
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: DB_PORT
+              - name: DB_NAME
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: DB_NAME
+              - name: DB_USER
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: DB_USER
+              - name: DB_PASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: DB_PASSWORD
+              - name: REDIS_HOST
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: REDIS_HOST
+              - name: REDIS_PORT
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: REDIS_PORT
+              - name: EXTERNAL_API_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: EXTERNAL_API_URL
+              - name: EXTERNAL_API_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: EXTERNAL_API_KEY
+              - name: ENABLE_METRICS
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: ENABLE_METRICS
+              - name: METRICS_PORT
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: METRICS_PORT
+              - name: API_PREFIX
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: API_PREFIX
+              - name: JWT_SECRET
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: JWT_SECRET
+              - name: JWT_EXPIRES_IN
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: JWT_EXPIRES_IN
+              - name: LOG_FILE
+                valueFrom:
+                  secretKeyRef:
+                    name: k8s-test-secret-prod
+                    key: LOG_FILE
+
+          # 리소스 요청/제한 설정
+          resources:
+            requests: # 최소 보장 리소스 (스케줄링 기준)
+              memory: "128Mi" # 최소 128MiB 메모리 필요
+              cpu: "100m" # 최소 0.1 CPU 필요 (100 milliCPU)
+            limits: # 최대 사용 가능 리소스
+              memory: "256Mi" # 최대 256MiB 메모리
+              cpu: "200m" # 최대 0.2 CPU 사용 가능
+
+          # Liveness Probe: 앱이 정상적으로 살아있는지 체크 (죽으면 재시작)
+          livenessProbe:
+            httpGet:
+              path: /health # 헬스 체크 엔드포인트
+              port: 3001
+            initialDelaySeconds: 30 # 컨테이너 시작 후 첫 체크까지 대기 시간
+            periodSeconds: 10 # 이후 체크 주기 (10초마다)
+
+          # Readiness Probe: 앱이 트래픽 받을 준비 됐는지 체크 (준비 안되면 트래픽 제외)
+          readinessProbe:
+            httpGet:
+              path: /health # readiness도 같은 /health 사용
+              port: 3001
+            initialDelaySeconds: 5 # 시작 후 5초 뒤 첫 체크
+            periodSeconds: 5 # 5초마다 체크
