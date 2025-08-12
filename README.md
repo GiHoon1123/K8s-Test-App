@@ -6,11 +6,10 @@
 
 ```
 .
-├── k8s-test-app/        # NestJS 애플리케이션
-├── k8s/                 # Kubernetes 매니페스트
-├── helm/                # Helm Chart
+├── k8s/                 # Kubernetes 매니페스트 (배포, 서비스, 인그레스, HPA)
 ├── argocd/              # ArgoCD 설정
 ├── scripts/             # 유틸리티 스크립트
+├── src/                 # NestJS 애플리케이션 소스
 ├── Jenkinsfile          # Jenkins Pipeline
 ├── kind.yaml           # Kind 클러스터 설정
 └── README.md           # 이 파일
@@ -23,7 +22,6 @@
 - Docker
 - Kind
 - kubectl
-- Helm (선택사항)
 
 ### 2. Kind 클러스터 설정
 
@@ -70,17 +68,17 @@ kubectl apply -f k8s/service.yaml
 kubectl apply -f k8s/ingress.yaml
 ```
 
-### Helm Chart 배포
+### 자동 스케일링 (HPA)
 
 ```bash
-# Helm Chart 설치
-helm install k8s-test-app ./helm/k8s-test-app
+# HPA 적용
+kubectl apply -f k8s/hpa.yaml
 
-# Helm Chart 업그레이드
-helm upgrade k8s-test-app ./helm/k8s-test-app
+# HPA 상태 확인
+kubectl get hpa -n k8s-test-app
 
-# Helm Chart 삭제
-helm uninstall k8s-test-app
+# HPA 상세 정보 확인
+kubectl describe hpa k8s-test-app-hpa -n k8s-test-app
 ```
 
 ### ArgoCD 배포
@@ -138,7 +136,6 @@ kubectl delete namespace k8s-test-app
 - [Kubernetes 공식 문서](https://kubernetes.io/docs/)
 - [Jenkins 공식 문서](https://www.jenkins.io/doc/)
 - [ArgoCD 공식 문서](https://argo-cd.readthedocs.io/)
-- [Helm 공식 문서](https://helm.sh/docs/)
 
 ## 🤝 기여
 

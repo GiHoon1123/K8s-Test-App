@@ -1,0 +1,27 @@
+apiVersion: autoscaling/v2 # HPA v2 API(권장). 리소스/외부/컨테이너별 등 다양한 메트릭 지정 가능
+kind: HorizontalPodAutoscaler # 가로(레플리카 수)로 스케일하는 컨트롤러
+metadata:
+  name: k8s-test-app-hpa # HPA 이름(네임스페이스 내 유일)
+  namespace: k8s-test-app # HPA가 존재할 네임스페이스 (타깃도 같은 NS여야 함)
+  labels:
+    app: k8s-test-app # 선택적 라벨(관리/검색 용)
+spec:
+  scaleTargetRef: # "무엇을" 스케일할지 지정
+    apiVersion: apps/v1 # 타깃 리소스의 API 버전
+    kind: Deployment # 타깃 종류(Deployment/StatefulSet 등)
+    name: k8s-test-app # 타깃 리소스 이름
+  minReplicas: 2 # 최소 파드 수(절대 이 아래로 내려가지 않음)
+  maxReplicas: 10 # 최대 파드 수(이 이상으로는 늘리지 않음)
+  metrics: # 스케일링 판단 기준(메트릭들, 여러 개 가능)
+    - type: Resource # 컨테이너 리소스 기반 메트릭(쿠버네티스 표준)
+      resource:
+        name: cpu # CPU 사용률 기준
+        target:
+          type: Utilization # "요청(requests) 대비 사용률(%)"을 목표로 함
+          averageUtilization: 70 # 파드 평균이 요청의 70%를 넘으면 스케일 아웃, 충분히 낮으면 스케일 인
+    - type: Resource
+      resource:
+        name: memory # 메모리 사용률 기준
+        target:
+          type: Utilization # "요청(requests) 대비 사용률(%)"
+          averageUtilization: 80 # 평균이 요청의 80%를 넘으면 스케일 아웃

@@ -17,10 +17,10 @@ kind load docker-image nestjs-app:latest --name nestjs-cluster
 echo "☸️  Deploying to Kubernetes..."
 cd ..
 kubectl apply -f k8s/namespace.yaml
-kubectl apply -f k8s/configmap.yaml
 kubectl apply -f k8s/deployment.yaml
 kubectl apply -f k8s/service.yaml
 kubectl apply -f k8s/ingress.yaml
+kubectl apply -f k8s/hpa.yaml
 
 # Wait for deployment to be ready
 echo "⏳ Waiting for deployment to be ready..."
@@ -31,6 +31,7 @@ echo "📊 Deployment status:"
 kubectl get pods -n nestjs-app
 kubectl get services -n nestjs-app
 kubectl get ingress -n nestjs-app
+kubectl get hpa -n nestjs-app
 
 echo "✅ Deployment complete!"
 echo "🌐 Application URL: http://nestjs-app.local"
