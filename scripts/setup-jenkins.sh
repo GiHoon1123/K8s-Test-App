@@ -15,11 +15,11 @@ docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 
 echo ""
 echo "✅ Jenkins setup complete!"
-echo "🌐 Jenkins UI: http://localhost:8080"
+echo "🌐 Jenkins UI: http://localhost:9091"
 echo "🔑 Initial password: (see above)"
 echo ""
 echo "📋 다음 단계:"
-echo "1. http://localhost:8080 접속"
+echo "1. http://localhost:9091 접속"
 echo "2. 초기 비밀번호 입력"
 echo "3. 'Install suggested plugins' 선택"
 echo "4. 관리자 계정 생성"

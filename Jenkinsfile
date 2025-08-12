@@ -16,7 +16,7 @@ pipeline {
         
         stage('Install Dependencies') {
             steps {
-                dir('my-nest-app') {
+                dir('k8s-test-app') {
                     sh 'npm ci'
                 }
             }
@@ -24,7 +24,7 @@ pipeline {
         
         stage('Run Tests') {
             steps {
-                dir('my-nest-app') {
+                dir('k8s-test-app') {
                     sh 'npm run test'
                 }
             }
@@ -32,7 +32,7 @@ pipeline {
         
         stage('Build Application') {
             steps {
-                dir('my-nest-app') {
+                dir('k8s-test-app') {
                     sh 'npm run build'
                 }
             }
@@ -40,7 +40,7 @@ pipeline {
         
         stage('Build Docker Image') {
             steps {
-                dir('my-nest-app') {
+                dir('k8s-test-app') {
                     sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
                     sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
                 }

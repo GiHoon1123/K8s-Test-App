@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/GiHoon1123/kubu-test.git
+    repoURL: https://github.com/GiHoon1123/K8s-Test-App
     targetRevision: HEAD
     path: k8s
   destination:

@@ -11,12 +11,12 @@ sleep 30
 
 echo ""
 echo "✅ ArgoCD setup complete!"
-echo "🌐 ArgoCD UI: http://localhost:9090"
+echo "🌐 ArgoCD UI: http://localhost:9092"
 echo "🔑 Username: admin"
 echo "🔑 Password: admin123"
 echo ""
 echo "📋 다음 단계:"
-echo "1. http://localhost:9090 접속"
+echo "1. http://localhost:9092 접속"
 echo "2. admin/admin123 로그인"
 echo "3. 'New App' 클릭"
 echo "4. Application 설정:"

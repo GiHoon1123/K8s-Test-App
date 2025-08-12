@@ -6,7 +6,7 @@ services:
     container_name: jenkins
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "9091:8080"
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
@@ -22,8 +22,8 @@ services:
     container_name: argocd-server
     restart: unless-stopped
     ports:
-      - "9090:8080"
-      - "9091:9090"
+      - "9092:8080"
+      - "9093:9090"
     environment:
       - ARGOCD_ADMIN_PASSWORD=admin123
     volumes:

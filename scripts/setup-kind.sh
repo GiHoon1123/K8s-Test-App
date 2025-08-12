@@ -38,6 +38,6 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 echo ""
 
 echo "✅ Kind cluster setup complete!"
-echo "🌐 ArgoCD UI: http://localhost:8080"
+echo "🌐 ArgoCD UI: http://localhost:9092"
 echo "🔑 Username: admin"
 echo "🔑 Password: (see above)"
